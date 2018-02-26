@@ -1,0 +1,12 @@
+.reveal pre code {
+    padding: 10px;
+    font-size: 0.8em;
+}
+
+.reveal code {
+    text-transform: none;
+}
+
+.orange {
+    color: #e49436;
+}
