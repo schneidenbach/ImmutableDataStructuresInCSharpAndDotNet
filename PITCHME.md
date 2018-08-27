@@ -46,15 +46,15 @@ var person = new Person();
 
 ---
 
-# <span class="orange">Functional programming</span>
+# <span class="orange">Functional</span> programming
 
 ---
 
-### Q. How do you know someones <span class="orange">"does"</span> functional programming?
+### Q. How do you know someones "does" <span class="orange">functional programming</span>?
 
 ---
 
-# <span class="orange">Functional programming</span>
+# <span class="orange">Functional</span> programming
 
 ---
 
@@ -62,12 +62,12 @@ var person = new Person();
 
 ---
 
-# WARNING
+# <span class="orange">WARNING</span>
 There are a lot of bad immutability jokes in these slide deck
 
 ---
 
-# <span class="orange">Have you done this?</span>
+# Have you done <span class="orange">this</span>?
 
 ---
 
@@ -107,22 +107,22 @@ There are a lot of bad immutability jokes in these slide deck
 
 ---
 
-# `NullReferenceException`
+## `NullReferenceException`
 
 ---
 
-# `NullReferenceException`
+## `NullReferenceException`
 cause you mutated your state
 
 ---
 
-# `NullReferenceException`
+## `NullReferenceException`
 cause you mutated your state  
 ...among other things
 
 ---
 
-## Mixed data and view stuff
+## Mixed <span class="orange">data</span> and <span class="orange">view stuff</span>
 
 ---
 
@@ -133,6 +133,11 @@ cause you mutated your state
 > A large fraction of the flaws in software development are due to programmers not fully understanding all the possible states their code may execute in.
 
 John Carmack
+
+---
+
+# Sacrifice
+Ease of change vs safety
 
 ---
 
@@ -173,11 +178,19 @@ John Carmack
 
 ---
 
+## <span class="orange">Multithreaded</span> data
+
+---
+
 ![Synchronization Quadrant](assets/syncquad1.png)
 
 ---
 
 ![Synchronization Quadrant](assets/syncquad2.png)
+
+---
+
+![Synchronization Quadrant](assets/syncquad3.png)
 
 ---
 
@@ -233,23 +246,6 @@ var now = DateTime.Now
 ```csharp
 public class Person
 {
-    //private setters - still mutable
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-
-    public Person(string firstName, string lastName)
-    {
-        FirstName = firstName;
-        LastName = lastName;
-    }
-}
-```
-
----
-
-```csharp
-public class Person
-{
     //readonly fields - does the job... but very ugly
     public readonly string _firstName;
     public string FirstName
@@ -269,11 +265,28 @@ public class Person
 
 ---
 
-## `private get` or `readonly` fields
+```csharp
+public class Person
+{
+    //private setters - still mutable
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+
+    public Person(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
+}
+```
 
 ---
 
-## `private get` or `readonly` fields
+### `private get` or `readonly` fields
+
+---
+
+### `private get` or `readonly` fields
 Neither solve the problem perfectly
 
 ---
@@ -337,11 +350,23 @@ var projection = employees.Select(e => new {
 
 ---
 
-## Anonymous types
+## <span class="orange">Anonymous types</span>
 * Immutable
 * Structural equality*
 
 *VB.NET, it's opt in
+
+---
+
+# YAY
+```csharp
+var projection = employees.Select(e => new {
+    e.FirstName,
+    e.LastName,
+    e.Number,
+    ManagerCode = e.Manager?.Number
+});
+```
 
 ---
 
@@ -384,7 +409,22 @@ employees
 
 ---
 
-# Projection
+# <span class="orange">Projection</span>
+
+---
+
+![Projection](assets/projecting.gif)
+
+---
+
+```csharp
+var projection = employees.Select(e => new {
+    e.FirstName,
+    e.LastName,
+    e.Number,
+    ManagerCode = e.Manager?.Number
+});
+```
 
 ---
 
@@ -488,11 +528,38 @@ var columns = GetColumnsForTable("People")
 
 ---
 
-# Projection
+# <span class="orange">Projection</span>
 
 ---
 
-## `System.Collections.Immutable`
+### `System.Collections.Immutable`
+
+---
+
+## `ImmutableList<T>`
+
+---
+
+## `ImmutableList<T>`
+[demo](https://dotnetfiddle.net/ElH2xj)
+
+---
+
+# <span class="orange">IMAGINE</span>
+
+---
+
+# <span class="orange">Imagine</span>
+if your objects never changed
+
+---
+
+# <span class="orange">Imagine</span>
+and your collections never changed
+
+---
+
+![Change the world](assets/changetheworld.gif)
 
 ---
 
@@ -566,12 +633,13 @@ public class Person
 
 ---
 
-## Builder pattern
+## <span class="orange">Builder pattern</span>
 
 Couple mutable "config" object with immutable "final state"
 
 ---
 
+## <span class="orange">Builder pattern</span>
 ```csharp
 public class DbContextOptionsBuilder
 {
@@ -585,7 +653,17 @@ public class DbContextOptionsBuilder
 
 ---
 
-## Builder pattern
+## <span class="orange">Builder pattern</span>
+```csharp
+app.UseDbContext(optionsBuilder => {
+    optionsBuilder.ConnectionString = "asdf";
+    optionsBuilder.UseConnectionPool();
+})
+```
+
+---
+
+## <span class="orange">Builder pattern</span>
 
 ---
 
@@ -601,25 +679,80 @@ public class DbContextOptionsBuilder
 
 ---
 
-## Where mutability shines
+## <span class="orange">Entity Framework</span>
 
 ---
 
-# Entity Framework
-
----
-
-# Entity Framework
+## <span class="orange">Entity Framework</span>
 * Databases are mutable
 
 ---
 
-# Entity Framework
+## <span class="orange">Entity Framework</span>
 * EF depends on mutability
 
 ---
 
+# `null`
 
+---
+
+### Q. How do you know someones "does" <span class="orange">functional programming</span>?
+
+---
+
+# <span class="orange">Imagine</span>
+
+---
+
+# <span class="orange">Imagine</span>
+if your objects never changed
+
+---
+
+# <span class="orange">Imagine</span>
+and your collections never changed
+
+---
+
+# <span class="orange">Imagine</span>
+AND you avoided null?
+
+---
+
+```csharp
+public class OrderService
+{
+    public OrderDbContext OrderDbContext { get; }
+    public IUserContext UserContext { get; }
+
+    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
+    {
+        OrderDbContext = orderDbContext ??
+                         throw new ArgumentNullException(nameof(orderDbContext));
+        UserContext = userContext ??
+                         throw new ArgumentNullException(nameof(userContext));
+    }
+}
+```
+
+---
+
+```csharp
+var spencer = GetEmployee("Spencer", "Schneidenbach");
+var spencersManager = spencer.GetManager();
+Console.WriteLine(spencersManager.Name);
+```
+
+---
+
+```csharp
+var spencer = GetEmployee("Spencer", "Schneidenbach");
+var spencersManager = spencer.GetManager();
+Console.WriteLine(spencersManager.Name);
+```
+
+### `NullReferenceException` was thrown
 
 ---
 
