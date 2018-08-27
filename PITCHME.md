@@ -194,7 +194,12 @@ John Carmack
 
 ---
 
-# Just imagine
+# <span class="orange">IMAGINE</span>
+
+---
+
+# <span class="orange">Imagine</span>
+if your objects never changed
 
 ---
 
@@ -367,6 +372,7 @@ var projection = employees.Select(e => new {
     ManagerCode = e.Manager?.Number
 });
 ```
+Can't touch this!
 
 ---
 
@@ -519,16 +525,21 @@ foreach (var column in columns)
 
 ---
 
+![Reasoning](assets/reasoning.png)
+
+---
+
+# <span class="orange">Projection</span>
+
+---
+
 ```csharp
 var columns = GetColumnsForTable("People")
 .Select(c => new Column(c.ColumnName, 
                         c.ColumnType == typeof(Guid) ? typeof(string)));
 
 ```
-
----
-
-# <span class="orange">Projection</span>
+As opposed to <span class="orange">mutation</span>
 
 ---
 
@@ -693,11 +704,137 @@ app.UseDbContext(optionsBuilder => {
 
 ---
 
+# <span class="orange">Refactoring</span>
+
+---
+
+```csharp
+void Page_Load()
+{
+    var orders = Repo.GetOrders();
+    DataGrid.DataSource = orders;
+    DataGrid.DataBind();
+}
+```
+---
+
+```csharp
+void Page_Load()
+{
+    var orders = Repo.GetOrders();  //what if this were immutable?
+    DataGrid.DataSource = orders;
+    DataGrid.DataBind();
+}
+```
+
+---
+
+## <span class="orange">Requirements</span>
+* Display negative orders in red
+* Don't display inactive salespeople
+* Display calculated order commission
+
+---
+
+```csharp
+void Page_Load()
+{
+    var orders = Repo.GetOrders();
+
+    AddRed(orders);
+    DisplayOnlyActiveSalesperson(orders);
+    CalculateCommission(orders);
+
+    DataGrid.DataSource = orders;
+    DataGrid.DataBind();
+}
+```
+
+---
+
+```csharp
+void Page_Load()
+{
+    var orders = Repo.GetOrders()
+        .Select(s => new {
+            o.Amount,
+            Commission = o.Salesperson?.IsEmployeeOfTheMonth == true
+                         ? o.Salesperson?.Commission * 2
+                         : o.Salesperson?.Commission,   //double commission
+            Salesperson = o.Salesperson?.Active == true
+                         ? o.Salesperson
+                         : null,    //don't display salesperson
+            o.Name      //...red should go in view model
+        })
+
+    DataGrid.DataSource = orders;
+    DataGrid.DataBind();
+}
+```
+
+---
+
+```csharp
+void Page_Load()
+{
+    var orders = Repo.GetOrders()
+        .Select(s => new {
+            o.Amount,
+            Commission = o.Salesperson?.IsEmployeeOfTheMonth == true
+                         ? o.Salesperson?.Commission * 2
+                         : o.Salesperson?.Commission,   //double commission
+            Salesperson = o.Salesperson?.Active == true
+                         ? o.Salesperson
+                         : null,    //don't display salesperson
+            Name = o.Amount < 0
+                         ? $"<span style='color:red'>{o.Name}</span>"
+                         : o.Name
+        });
+
+    DataGrid.DataSource = orders;
+    DataGrid.DataBind();
+}
+```
+
+---
+
 # `null`
 
 ---
 
 ### Q. How do you know someones "does" <span class="orange">functional programming</span>?
+
+---
+
+# <span class="orange">Takeaways</span>
+
+---
+
+# <span class="orange">Takeaways</span>
+Program defensively
+
+---
+
+# <span class="orange">Takeaways</span>
+Mutate sparingly
+
+---
+
+```csharp
+public class OrderService
+{
+    public OrderDbContext OrderDbContext { get; }
+    public IUserContext UserContext { get; }
+
+    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
+    {
+        OrderDbContext = orderDbContext ??
+                         throw new ArgumentNullException(nameof(orderDbContext));
+        UserContext = userContext ??
+                         throw new ArgumentNullException(nameof(userContext));
+    }
+}
+```
 
 ---
 
@@ -720,21 +857,7 @@ AND you avoided null?
 
 ---
 
-```csharp
-public class OrderService
-{
-    public OrderDbContext OrderDbContext { get; }
-    public IUserContext UserContext { get; }
-
-    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
-    {
-        OrderDbContext = orderDbContext ??
-                         throw new ArgumentNullException(nameof(orderDbContext));
-        UserContext = userContext ??
-                         throw new ArgumentNullException(nameof(userContext));
-    }
-}
-```
+![Change the world](assets/changetheworld.gif)
 
 ---
 
