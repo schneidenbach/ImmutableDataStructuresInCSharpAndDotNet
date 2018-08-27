@@ -570,10 +570,6 @@ and your collections never changed
 
 ---
 
-![Change the world](assets/changetheworld.gif)
-
----
-
 ## Library support
 
 ---
@@ -671,10 +667,6 @@ app.UseDbContext(optionsBuilder => {
     optionsBuilder.UseConnectionPool();
 })
 ```
-
----
-
-## <span class="orange">Builder pattern</span>
 
 ---
 
@@ -820,6 +812,29 @@ Mutate sparingly
 
 ---
 
+# <span class="orange">Takeaways</span>
+Avoid "setup" methods
+
+---
+
+```csharp
+var service = GetService(someConfiguration);
+service.Init();
+service.DoSomething();
+```
+
+---
+
+## Factory pattern
+
+```csharp
+var serviceFactory = new ServiceFactory();
+var service = serviceFactory.CreateService(someConfiguration);
+service.DoSomething();
+```
+
+---
+
 ```csharp
 public class OrderService
 {
@@ -875,7 +890,7 @@ var spencersManager = spencer.GetManager();
 Console.WriteLine(spencersManager.Name);
 ```
 
-### `NullReferenceException` was thrown
+#### `NullReferenceException` was thrown
 
 ---
 
