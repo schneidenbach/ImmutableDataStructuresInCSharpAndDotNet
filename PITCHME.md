@@ -63,7 +63,7 @@ var person = new Person();
 ---
 
 # <span class="orange">WARNING</span>
-There are a lot of bad immutability jokes in these slide deck
+There are a lot of bad immutability jokes in this slide deck
 
 ---
 
@@ -112,12 +112,12 @@ There are a lot of bad immutability jokes in these slide deck
 ---
 
 ## `NullReferenceException`
-cause you mutated your state
+cause you mutated your data
 
 ---
 
 ## `NullReferenceException`
-cause you mutated your state  
+cause you mutated your data  
 ...among other things
 
 ---
@@ -130,9 +130,7 @@ cause you mutated your state
 
 ---
 
-> A large fraction of the flaws in software development are due to programmers not fully understanding all the possible states their code may execute in.
-
-John Carmack
+Passing mutable data to methods is basically <span class="orange">giving that method permission to change the data</span> when it suits them
 
 ---
 
@@ -163,14 +161,36 @@ John Carmack
 
 ---
 
+### Change Tweet w/ edit button
+- What if it's been retweeted?
+- What if it's been liked?
+- What if it's been quoted?
+- Does the date/time stamp get reset?
+
+---
+
 ### Change Tweet w/o edit button
 - ...You can't
 
 ---
 
-### Change Tweet w/ edit button
-- What if it's been retweeted?
-- What if it's been liked?
+![Reasoning](assets/reasoning.png)
+
+---
+
+```csharp
+public void DoSomething(List<string> list);
+```
+
+---
+
+```csharp
+public void DoSomething(List<string> list);
+```
+
+* Can I add to this list?
+* Can I remove elements?
+* Why am I getting a list vs. `IEnumerable<string>`?
 
 ---
 
@@ -191,15 +211,6 @@ John Carmack
 ---
 
 ![Synchronization Quadrant](assets/syncquad3.png)
-
----
-
-# <span class="orange">IMAGINE</span>
-
----
-
-# <span class="orange">Imagine</span>
-if your objects never changed
 
 ---
 
@@ -238,8 +249,7 @@ now.AddHours(1);
 ---
 
 ```csharp
-var now = DateTime.Now
-                  .AddHours(1);
+var now = DateTime.Now.AddHours(1);
 ```
 
 ---
@@ -419,10 +429,6 @@ employees
 
 ---
 
-![Projection](assets/projecting.gif)
-
----
-
 ```csharp
 var projection = employees.Select(e => new {
     e.FirstName,
@@ -529,6 +535,10 @@ foreach (var column in columns)
 
 ---
 
+Passing mutable data to methods is basically <span class="orange">giving that method permission</span> to change the data when it suits them
+
+---
+
 # <span class="orange">Projection</span>
 
 ---
@@ -553,20 +563,6 @@ As opposed to <span class="orange">mutation</span>
 
 ## `ImmutableList<T>`
 [demo](https://dotnetfiddle.net/ElH2xj)
-
----
-
-# <span class="orange">IMAGINE</span>
-
----
-
-# <span class="orange">Imagine</span>
-if your objects never changed
-
----
-
-# <span class="orange">Imagine</span>
-and your collections never changed
 
 ---
 
@@ -873,24 +869,6 @@ AND you avoided null?
 ---
 
 ![Change the world](assets/changetheworld.gif)
-
----
-
-```csharp
-var spencer = GetEmployee("Spencer", "Schneidenbach");
-var spencersManager = spencer.GetManager();
-Console.WriteLine(spencersManager.Name);
-```
-
----
-
-```csharp
-var spencer = GetEmployee("Spencer", "Schneidenbach");
-var spencersManager = spencer.GetManager();
-Console.WriteLine(spencersManager.Name);
-```
-
-#### `NullReferenceException` was thrown
 
 ---
 
