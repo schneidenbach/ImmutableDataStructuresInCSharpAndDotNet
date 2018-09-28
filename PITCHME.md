@@ -751,9 +751,8 @@ public class OrderService
 ```csharp
 public class Person
 {
-    //private setters - still mutable
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
+    public string FirstName { get; }
+    public string LastName { get; }
 
     public Person(string firstName, string lastName)
     {
@@ -768,9 +767,8 @@ public class Person
 ```csharp
 public class Person
 {
-    //private setters - still mutable
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
+    public string FirstName { get; }
+    public string LastName { get; }
 
     public Person(string firstName, string lastName)
     {
