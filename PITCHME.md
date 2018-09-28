@@ -67,6 +67,16 @@ There are a lot of bad immutability jokes in this slide deck
 
 ---
 
+## Programming by <span class="orange">hope</span>
+
+---
+
+## Programming by <span class="orange">hope</span>
+
+As in, I hope I don't break something
+
+---
+
 # Have you done <span class="orange">this</span>?
 
 ---
@@ -190,7 +200,7 @@ public void DoSomething(List<string> list);
 
 * Can I add to this list?
 * Can I remove elements?
-* Why am I getting a list vs. `IEnumerable<string>`?
+* Why not `IEnumerable<string>`?
 
 ---
 
@@ -561,8 +571,27 @@ As opposed to <span class="orange">mutation</span>
 
 ---
 
-## `ImmutableList<T>`
-[demo](https://dotnetfiddle.net/ElH2xj)
+```csharp
+ImmutableList<string> list = ImmutableList.Create<string>("spencer");
+ImmutableList<string> list2 = list.Add("spencer");
+
+Console.WriteLine(list.Count);
+Console.WriteLine(list2.Count);
+
+Console.WriteLine(list.GetHashCode() == list2.GetHashCode());
+```
+
+---
+
+```csharp
+ImmutableList<string> list = ImmutableList.Create<string>("spencer");
+ImmutableList<string> list2 = list.Add("spencer");
+
+Console.WriteLine(list.Count);  //1
+Console.WriteLine(list2.Count); //2
+
+Console.WriteLine(list.GetHashCode() == list2.GetHashCode()); //false
+```
 
 ---
 
@@ -666,6 +695,99 @@ app.UseDbContext(optionsBuilder => {
 
 ---
 
+## Have you seen <span class="orange">this</span>?
+```csharp
+var service = GetService(someConfiguration);
+service.Init();
+service.DoSomething();
+```
+
+---
+
+## <span class="orange">Factory pattern</span>
+
+```csharp
+var serviceFactory = new ServiceFactory();
+var service = serviceFactory.CreateService(someConfiguration);
+service.DoSomething();
+```
+
+---
+
+```csharp
+public class OrderService
+{
+    public OrderDbContext OrderDbContext { get; }
+    public IUserContext UserContext { get; }
+
+    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
+    {
+        OrderDbContext = orderDbContext;
+        UserContext = userContext;
+    }
+}
+```
+
+---
+
+```csharp
+public class OrderService
+{
+    public OrderDbContext OrderDbContext { get; }
+    public IUserContext UserContext { get; }
+
+    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
+    {
+        OrderDbContext = orderDbContext ??
+                         throw new ArgumentNullException(nameof(orderDbContext));
+        UserContext = userContext ??
+                         throw new ArgumentNullException(nameof(userContext));
+    }
+}
+```
+
+---
+
+```csharp
+public class Person
+{
+    //private setters - still mutable
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+
+    public Person(string firstName, string lastName)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+    }
+}
+```
+
+---
+
+```csharp
+public class Person
+{
+    //private setters - still mutable
+    public string FirstName { get; private set; }
+    public string LastName { get; private set; }
+
+    public Person(string firstName, string lastName)
+    {
+        FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
+        LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
+    }
+}
+```
+
+---
+
+## <span class="orange">One-two punch</span>
+* Compile-time: immutability
+* Runtime: not null
+
+---
+
 ![Yin and Yang](assets/yinyang.png)
 
 ---
@@ -689,6 +811,10 @@ app.UseDbContext(optionsBuilder => {
 
 ## <span class="orange">Entity Framework</span>
 * EF depends on mutability
+
+---
+
+## Mutability is a <span class="orange">tool</span>
 
 ---
 
@@ -810,42 +936,6 @@ Mutate sparingly
 
 # <span class="orange">Takeaways</span>
 Avoid "setup" methods
-
----
-
-```csharp
-var service = GetService(someConfiguration);
-service.Init();
-service.DoSomething();
-```
-
----
-
-## Factory pattern
-
-```csharp
-var serviceFactory = new ServiceFactory();
-var service = serviceFactory.CreateService(someConfiguration);
-service.DoSomething();
-```
-
----
-
-```csharp
-public class OrderService
-{
-    public OrderDbContext OrderDbContext { get; }
-    public IUserContext UserContext { get; }
-
-    public OrderService(OrderDbContext orderDbContext, IUserContext userContext)
-    {
-        OrderDbContext = orderDbContext ??
-                         throw new ArgumentNullException(nameof(orderDbContext));
-        UserContext = userContext ??
-                         throw new ArgumentNullException(nameof(userContext));
-    }
-}
-```
 
 ---
 
